@@ -5,9 +5,11 @@
 
 This repo holds all the code snippets from my presentation at Pycon AU 2019.
 
+This time around I'm using [pipenv](https://github.com/pypa/pipenv) to specify requirements, Python version, etc. Before playing with these snippets, run `pipenv install` from this directory and source the environment with `pipenv shell`.
+
 See the summary for my presentation here: https://2019.pycon-au.org/talks/no-time-to-idle-about-profiling-import-time-in-python 
 
-This repo contains a PDF of the presentation. I haven't included the source itself in case FB doesn't want other people using their slide deck, but later on I might migrate the speech to a non-fb slide deck and upload it here 😀😀🐍🐍.
+There is also a PDF of the presentation. I haven't included the source itself in case FB doesn't want other people using their slide deck, but later on I might migrate the speech to a non-fb slide deck and upload it here 😀😀🐍🐍.
 
 Btw, to copy code snippets into Keynote, you can do the following:
 - Open Terminal (Terminal.app, not iTerm 2).
