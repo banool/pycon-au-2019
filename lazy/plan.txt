@@ -1,0 +1,3 @@
+- read in import time data / most expensive imports
+- overwrite loader
+  - when you are about to load a module in the list, instead put in a class that stores the module to be loaded inside it. when someone tries to access something in the module, the getattr method will cause the module to be loaded. to save on runtime cost it could even replace itself in sys.modules with the loaded module
