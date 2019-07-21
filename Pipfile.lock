@@ -1,0 +1,41 @@
+{
+    "_meta": {
+        "hash": {
+            "sha256": "f1e13069ab5b776dacd56dd8f4f99759f3c9e48e278f89ffe5c3ac8fbcb0ad83"
+        },
+        "pipfile-spec": 6,
+        "requires": {
+            "python_version": "3.7"
+        },
+        "sources": [
+            {
+                "name": "pypi",
+                "url": "https://pypi.org/simple",
+                "verify_ssl": true
+            }
+        ]
+    },
+    "default": {
+        "pydeps": {
+            "editable": true,
+            "git": "https://github.com/banool/pydeps.git",
+            "ref": "5a4f25cb55c50fca1b426b759bd3dae01a71398a"
+        },
+        "stdlib-list": {
+            "hashes": [
+                "sha256:5311a95812ebce3c5ad0b1f6ded798ce6f945d157075d166a5426c2da75a6625",
+                "sha256:fe30e9fc98304de4207f545311c75a6ad7701719bbeb1ac018a0fcf6aa70c0ce"
+            ],
+            "version": "==0.5.0"
+        },
+        "tuna": {
+            "hashes": [
+                "sha256:54e65eb285e2e233c5396ef9e6f7187c17c7b530d5749ad8745090a380908381",
+                "sha256:5d92b7e3d55c847daa61ab49d375e765ff93946708cc9efc3cbdd212db4f94f4"
+            ],
+            "index": "pypi",
+            "version": "==0.3.0"
+        }
+    },
+    "develop": {}
+}

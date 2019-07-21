@@ -1,0 +1,31 @@
+{
+ "nodes": [
+  {
+   "id": "large",
+   "label": "large",
+   "size": 1632
+  },
+  {
+   "id": "main",
+   "label": "main",
+   "size": 1
+  },
+  {
+   "id": "small",
+   "label": "small",
+   "size": 553
+  }
+ ],
+ "edges": [
+  {
+   "id": "main->large",
+   "source": "main",
+   "target": "large"
+  },
+  {
+   "id": "main->small",
+   "source": "main",
+   "target": "small"
+  }
+ ]
+}

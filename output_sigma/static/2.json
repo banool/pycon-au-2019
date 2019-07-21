@@ -1,0 +1,37 @@
+{
+ "nodes": [
+  {
+   "id": "small",
+   "label": "small:553us",
+   "size": 553,
+   "x": "0.94123",
+   "y": "0.59497"
+  },
+  {
+   "id": "main",
+   "label": "main:0us",
+   "size": 1,
+   "x": "0.44945",
+   "y": "0.44332"
+  },
+  {
+   "id": "large",
+   "label": "large:1632us",
+   "size": 1632,
+   "x": "0.20617",
+   "y": "0.53549"
+  }
+ ],
+ "edges": [
+  {
+   "id": "main->small",
+   "source": "main",
+   "target": "small"
+  },
+  {
+   "id": "main->large",
+   "source": "main",
+   "target": "large"
+  }
+ ]
+}

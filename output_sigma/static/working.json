@@ -1,0 +1,40 @@
+{
+ "nodes": [
+  {
+   "color": "#666",
+   "id": "n0",
+   "label": "large",
+   "size": 0.7,
+   "x": 0.3,
+   "y": 0.7
+  },
+  {
+   "color": "#666",
+   "id": "n1",
+   "label": "main",
+   "size": 0.8,
+   "x": 0.8,
+   "y": 0.3
+  },
+  {
+   "color": "#666",
+   "id": "n2",
+   "label": "small",
+   "size": 0.8,
+   "x": 0.4,
+   "y": 0.7
+  }
+ ],
+ "edges": [
+  {
+   "id": "e0",
+   "source": "n1",
+   "target": "n0"
+  },
+  {
+   "id": "e1",
+   "source": "n1",
+   "target": "n2"
+  }
+ ]
+}
