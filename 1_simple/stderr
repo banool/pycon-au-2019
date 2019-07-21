@@ -1,0 +1,27 @@
+import time: self [us] | cumulative | imported package
+import time:       154 |        154 | zipimport
+import time:       797 |        797 | _frozen_importlib_external
+import time:       114 |        114 |     _codecs
+import time:      7317 |       7431 |   codecs
+import time:       713 |        713 |   encodings.aliases
+import time:       829 |       8972 | encodings
+import time:       315 |        315 | encodings.utf_8
+import time:       141 |        141 | _signal
+import time:       363 |        363 | encodings.latin_1
+import time:        69 |         69 |     _abc
+import time:      1002 |       1070 |   abc
+import time:       793 |       1863 | io
+import time:       102 |        102 |   _locale
+import time:       467 |        568 | _bootlocale
+import time:       107 |        107 |       _stat
+import time:      1337 |       1444 |     stat
+import time:       824 |        824 |       genericpath
+import time:      2671 |       3494 |     posixpath
+import time:      4999 |       4999 |     _collections_abc
+import time:      5611 |      15547 |   os
+import time:       283 |        283 |   __builtin__
+import time:       824 |        824 |   sitecustomize
+import time:      5961 |      22614 | site
+import time:       588 |        588 |   time
+import time:   1002317 |    1002904 | small
+import time:  10011514 |   10011514 | large
