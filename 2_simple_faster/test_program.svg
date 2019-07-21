@@ -1,0 +1,453 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" width="1400" height="230" onload="init(evt)" viewBox="0 0 1400 230" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<!-- Flame graph stack visualization. See https://github.com/brendangregg/FlameGraph for latest version, and http://www.brendangregg.com/flamegraphs.html for examples. -->
+<!-- NOTES:  -->
+<defs>
+	<linearGradient id="background" y1="0" y2="1" x1="0" x2="0" >
+		<stop stop-color="#eeeeee" offset="5%" />
+		<stop stop-color="#eeeeb0" offset="95%" />
+	</linearGradient>
+</defs>
+<style type="text/css">
+	text { font-family:Verdana; font-size:12px; fill:rgb(0,0,0); }
+	#search { opacity:0.1; cursor:pointer; }
+	#search:hover, #search.show { opacity:1; }
+	#subtitle { text-anchor:middle; font-color:rgb(160,160,160); }
+	#title { text-anchor:middle; font-size:17px}
+	#unzoom { cursor:pointer; }
+	#frames > *:hover { stroke:black; stroke-width:0.5; cursor:pointer; }
+	.hide { display:none; }
+	.parent { opacity:0.5; }
+</style>
+<script type="text/ecmascript">
+<![CDATA[
+	"use strict";
+	var details, searchbtn, unzoombtn, matchedtxt, svg, searching;
+	function init(evt) {
+		details = document.getElementById("details").firstChild;
+		searchbtn = document.getElementById("search");
+		unzoombtn = document.getElementById("unzoom");
+		matchedtxt = document.getElementById("matched");
+		svg = document.getElementsByTagName("svg")[0];
+		searching = 0;
+	}
+
+	window.addEventListener("click", function(e) {
+		var target = find_group(e.target);
+		if (target) {
+			if (target.nodeName == "a") {
+				if (e.ctrlKey === false) return;
+				e.preventDefault();
+			}
+			if (target.classList.contains("parent")) unzoom();
+			zoom(target);
+		}
+		else if (e.target.id == "unzoom") unzoom();
+		else if (e.target.id == "search") search_prompt();
+	}, false)
+
+	// mouse-over for info
+	// show
+	window.addEventListener("mouseover", function(e) {
+		var target = find_group(e.target);
+		if (target) details.nodeValue = "Function: " + g_to_text(target);
+	}, false)
+
+	// clear
+	window.addEventListener("mouseout", function(e) {
+		var target = find_group(e.target);
+		if (target) details.nodeValue = ' ';
+	}, false)
+
+	// ctrl-F for search
+	window.addEventListener("keydown",function (e) {
+		if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) {
+			e.preventDefault();
+			search_prompt();
+		}
+	}, false)
+
+	// functions
+	function find_child(node, selector) {
+		var children = node.querySelectorAll(selector);
+		if (children.length) return children[0];
+		return;
+	}
+	function find_group(node) {
+		var parent = node.parentElement;
+		if (!parent) return;
+		if (parent.id == "frames") return node;
+		return find_group(parent);
+	}
+	function orig_save(e, attr, val) {
+		if (e.attributes["_orig_" + attr] != undefined) return;
+		if (e.attributes[attr] == undefined) return;
+		if (val == undefined) val = e.attributes[attr].value;
+		e.setAttribute("_orig_" + attr, val);
+	}
+	function orig_load(e, attr) {
+		if (e.attributes["_orig_"+attr] == undefined) return;
+		e.attributes[attr].value = e.attributes["_orig_" + attr].value;
+		e.removeAttribute("_orig_"+attr);
+	}
+	function g_to_text(e) {
+		var text = find_child(e, "title").firstChild.nodeValue;
+		return (text)
+	}
+	function g_to_func(e) {
+		var func = g_to_text(e);
+		// if there's any manipulation we want to do to the function
+		// name before it's searched, do it here before returning.
+		return (func);
+	}
+	function update_text(e) {
+		var r = find_child(e, "rect");
+		var t = find_child(e, "text");
+		var w = parseFloat(r.attributes.width.value) -3;
+		var txt = find_child(e, "title").textContent.replace(/\([^(]*\)$/,"");
+		t.attributes.x.value = parseFloat(r.attributes.x.value) + 3;
+
+		// Smaller than this size won't fit anything
+		if (w < 2 * 12 * 0.59) {
+			t.textContent = "";
+			return;
+		}
+
+		t.textContent = txt;
+		// Fit in full text width
+		if (/^ *$/.test(txt) || t.getSubStringLength(0, txt.length) < w)
+			return;
+
+		for (var x = txt.length - 2; x > 0; x--) {
+			if (t.getSubStringLength(0, x + 2) <= w) {
+				t.textContent = txt.substring(0, x) + "..";
+				return;
+			}
+		}
+		t.textContent = "";
+	}
+
+	// zoom
+	function zoom_reset(e) {
+		if (e.attributes != undefined) {
+			orig_load(e, "x");
+			orig_load(e, "width");
+		}
+		if (e.childNodes == undefined) return;
+		for (var i = 0, c = e.childNodes; i < c.length; i++) {
+			zoom_reset(c[i]);
+		}
+	}
+	function zoom_child(e, x, ratio) {
+		if (e.attributes != undefined) {
+			if (e.attributes.x != undefined) {
+				orig_save(e, "x");
+				e.attributes.x.value = (parseFloat(e.attributes.x.value) - x - 10) * ratio + 10;
+				if (e.tagName == "text")
+					e.attributes.x.value = find_child(e.parentNode, "rect[x]").attributes.x.value + 3;
+			}
+			if (e.attributes.width != undefined) {
+				orig_save(e, "width");
+				e.attributes.width.value = parseFloat(e.attributes.width.value) * ratio;
+			}
+		}
+
+		if (e.childNodes == undefined) return;
+		for (var i = 0, c = e.childNodes; i < c.length; i++) {
+			zoom_child(c[i], x - 10, ratio);
+		}
+	}
+	function zoom_parent(e) {
+		if (e.attributes) {
+			if (e.attributes.x != undefined) {
+				orig_save(e, "x");
+				e.attributes.x.value = 10;
+			}
+			if (e.attributes.width != undefined) {
+				orig_save(e, "width");
+				e.attributes.width.value = parseInt(svg.width.baseVal.value) - (10 * 2);
+			}
+		}
+		if (e.childNodes == undefined) return;
+		for (var i = 0, c = e.childNodes; i < c.length; i++) {
+			zoom_parent(c[i]);
+		}
+	}
+	function zoom(node) {
+		var attr = find_child(node, "rect").attributes;
+		var width = parseFloat(attr.width.value);
+		var xmin = parseFloat(attr.x.value);
+		var xmax = parseFloat(xmin + width);
+		var ymin = parseFloat(attr.y.value);
+		var ratio = (svg.width.baseVal.value - 2 * 10) / width;
+
+		// XXX: Workaround for JavaScript float issues (fix me)
+		var fudge = 0.0001;
+
+		unzoombtn.classList.remove("hide");
+
+		var el = document.getElementById("frames").children;
+		for (var i = 0; i < el.length; i++) {
+			var e = el[i];
+			var a = find_child(e, "rect").attributes;
+			var ex = parseFloat(a.x.value);
+			var ew = parseFloat(a.width.value);
+			var upstack;
+			// Is it an ancestor
+			if (0 == 0) {
+				upstack = parseFloat(a.y.value) > ymin;
+			} else {
+				upstack = parseFloat(a.y.value) < ymin;
+			}
+			if (upstack) {
+				// Direct ancestor
+				if (ex <= xmin && (ex+ew+fudge) >= xmax) {
+					e.classList.add("parent");
+					zoom_parent(e);
+					update_text(e);
+				}
+				// not in current path
+				else
+					e.classList.add("hide");
+			}
+			// Children maybe
+			else {
+				// no common path
+				if (ex < xmin || ex + fudge >= xmax) {
+					e.classList.add("hide");
+				}
+				else {
+					zoom_child(e, xmin, ratio);
+					update_text(e);
+				}
+			}
+		}
+	}
+	function unzoom() {
+		unzoombtn.classList.add("hide");
+		var el = document.getElementById("frames").children;
+		for(var i = 0; i < el.length; i++) {
+			el[i].classList.remove("parent");
+			el[i].classList.remove("hide");
+			zoom_reset(el[i]);
+			update_text(el[i]);
+		}
+	}
+
+	// search
+	function reset_search() {
+		var el = document.querySelectorAll("#frames rect");
+		for (var i = 0; i < el.length; i++) {
+			orig_load(el[i], "fill")
+		}
+	}
+	function search_prompt() {
+		if (!searching) {
+			var term = prompt("Enter a search term (regexp " +
+			    "allowed, eg: ^ext4_)", "");
+			if (term != null) {
+				search(term)
+			}
+		} else {
+			reset_search();
+			searching = 0;
+			searchbtn.classList.remove("show");
+			searchbtn.firstChild.nodeValue = "Search"
+			matchedtxt.classList.add("hide");
+			matchedtxt.firstChild.nodeValue = ""
+		}
+	}
+	function search(term) {
+		var re = new RegExp(term);
+		var el = document.getElementById("frames").children;
+		var matches = new Object();
+		var maxwidth = 0;
+		for (var i = 0; i < el.length; i++) {
+			var e = el[i];
+			var func = g_to_func(e);
+			var rect = find_child(e, "rect");
+			if (func == null || rect == null)
+				continue;
+
+			// Save max width. Only works as we have a root frame
+			var w = parseFloat(rect.attributes.width.value);
+			if (w > maxwidth)
+				maxwidth = w;
+
+			if (func.match(re)) {
+				// highlight
+				var x = parseFloat(rect.attributes.x.value);
+				orig_save(rect, "fill");
+				rect.attributes.fill.value = "rgb(230,0,230)";
+
+				// remember matches
+				if (matches[x] == undefined) {
+					matches[x] = w;
+				} else {
+					if (w > matches[x]) {
+						// overwrite with parent
+						matches[x] = w;
+					}
+				}
+				searching = 1;
+			}
+		}
+		if (!searching)
+			return;
+
+		searchbtn.classList.add("show");
+		searchbtn.firstChild.nodeValue = "Reset Search";
+
+		// calculate percent matched, excluding vertical overlap
+		var count = 0;
+		var lastx = -1;
+		var lastw = 0;
+		var keys = Array();
+		for (k in matches) {
+			if (matches.hasOwnProperty(k))
+				keys.push(k);
+		}
+		// sort the matched frames by their x location
+		// ascending, then width descending
+		keys.sort(function(a, b){
+			return a - b;
+		});
+		// Step through frames saving only the biggest bottom-up frames
+		// thanks to the sort order. This relies on the tree property
+		// where children are always smaller than their parents.
+		var fudge = 0.0001;	// JavaScript floating point
+		for (var k in keys) {
+			var x = parseFloat(keys[k]);
+			var w = matches[keys[k]];
+			if (x >= lastx + lastw - fudge) {
+				count += w;
+				lastx = x;
+				lastw = w;
+			}
+		}
+		// display matched percent
+		matchedtxt.classList.remove("hide");
+		var pct = 100 * count / maxwidth;
+		if (pct != 100) pct = pct.toFixed(1)
+		matchedtxt.firstChild.nodeValue = "Matched: " + pct + "%";
+	}
+]]>
+</script>
+<rect x="0.0" y="0" width="1400.0" height="230.0" fill="url(#background)"  />
+<text id="title" x="700.00" y="24" >Flame Chart</text>
+<text id="details" x="10.00" y="213" > </text>
+<text id="unzoom" x="10.00" y="24" class="hide">Reset Zoom</text>
+<text id="search" x="1290.00" y="24" >Search</text>
+<text id="matched" x="1290.00" y="213" > </text>
+<g id="frames">
+<g >
+<title>encodings (6,400 samples, 15.46%)</title><rect x="31.6" y="133" width="213.4" height="31.0" fill="rgb(216,148,22)" rx="2" ry="2" />
+<text  x="34.61" y="151.5" >encodings</text>
+</g>
+<g >
+<title>large_import (12,095 samples, 29.22%)</title><rect x="986.7" y="133" width="403.3" height="31.0" fill="rgb(205,86,22)" rx="2" ry="2" />
+<text  x="989.74" y="151.5" >large_import</text>
+</g>
+<g >
+<title>_bootlocale (507 samples, 1.22%)</title><rect x="312.4" y="133" width="16.9" height="31.0" fill="rgb(222,153,12)" rx="2" ry="2" />
+<text  x="315.41" y="151.5" ></text>
+</g>
+<g >
+<title>site (17,678 samples, 42.71%)</title><rect x="329.3" y="133" width="589.4" height="31.0" fill="rgb(211,176,19)" rx="2" ry="2" />
+<text  x="332.31" y="151.5" >site</text>
+</g>
+<g >
+<title>zipimport (103 samples, 0.25%)</title><rect x="10.0" y="133" width="3.4" height="31.0" fill="rgb(246,193,4)" rx="2" ry="2" />
+<text  x="13.00" y="151.5" ></text>
+</g>
+<g >
+<title>small_import (2,040 samples, 4.93%)</title><rect x="918.7" y="133" width="68.0" height="31.0" fill="rgb(254,164,12)" rx="2" ry="2" />
+<text  x="921.72" y="151.5" >small_i..</text>
+</g>
+<g >
+<title>_frozen_importlib_external (545 samples, 1.32%)</title><rect x="13.4" y="133" width="18.2" height="31.0" fill="rgb(240,200,43)" rx="2" ry="2" />
+<text  x="16.43" y="151.5" ></text>
+</g>
+<g >
+<title>_signal (97 samples, 0.23%)</title><rect x="252.2" y="133" width="3.2" height="31.0" fill="rgb(239,183,46)" rx="2" ry="2" />
+<text  x="255.19" y="151.5" ></text>
+</g>
+<g >
+<title>encodings.latin_1 (250 samples, 0.60%)</title><rect x="255.4" y="133" width="8.4" height="31.0" fill="rgb(230,54,54)" rx="2" ry="2" />
+<text  x="258.43" y="151.5" ></text>
+</g>
+<g >
+<title>posixpath (2,682 samples, 6.48%)</title><rect x="645.4" y="69" width="89.4" height="31.0" fill="rgb(226,191,47)" rx="2" ry="2" />
+<text  x="648.39" y="87.5" >posixpath</text>
+</g>
+<g >
+<title>__builtin__ (286 samples, 0.69%)</title><rect x="880.3" y="101" width="9.5" height="31.0" fill="rgb(235,127,30)" rx="2" ry="2" />
+<text  x="883.28" y="119.5" ></text>
+</g>
+<g >
+<title>all (41,390 samples, 100%)</title><rect x="10.0" y="165" width="1380.0" height="31.0" fill="rgb(248,142,33)" rx="2" ry="2" />
+<text  x="13.00" y="183.5" ></text>
+</g>
+<g >
+<title>encodings.aliases (574 samples, 1.39%)</title><rect x="225.9" y="101" width="19.1" height="31.0" fill="rgb(247,188,54)" rx="2" ry="2" />
+<text  x="228.85" y="119.5" ></text>
+</g>
+<g >
+<title>_abc (65 samples, 0.16%)</title><rect x="310.2" y="69" width="2.2" height="31.0" fill="rgb(249,228,20)" rx="2" ry="2" />
+<text  x="313.24" y="87.5" ></text>
+</g>
+<g >
+<title>_codecs (74 samples, 0.18%)</title><rect x="223.4" y="69" width="2.5" height="31.0" fill="rgb(219,81,43)" rx="2" ry="2" />
+<text  x="226.38" y="87.5" ></text>
+</g>
+<g >
+<title>_locale (139 samples, 0.34%)</title><rect x="324.7" y="101" width="4.6" height="31.0" fill="rgb(206,123,5)" rx="2" ry="2" />
+<text  x="327.68" y="119.5" ></text>
+</g>
+<g >
+<title>encodings.utf_8 (216 samples, 0.52%)</title><rect x="245.0" y="133" width="7.2" height="31.0" fill="rgb(220,134,54)" rx="2" ry="2" />
+<text  x="247.99" y="151.5" ></text>
+</g>
+<g >
+<title>sitecustomize (867 samples, 2.09%)</title><rect x="889.8" y="101" width="28.9" height="31.0" fill="rgb(254,205,31)" rx="2" ry="2" />
+<text  x="892.81" y="119.5" >si..</text>
+</g>
+<g >
+<title>time (661 samples, 1.60%)</title><rect x="964.7" y="101" width="22.0" height="31.0" fill="rgb(233,79,29)" rx="2" ry="2" />
+<text  x="967.70" y="119.5" >t..</text>
+</g>
+<g >
+<title>stat (811 samples, 1.96%)</title><rect x="618.3" y="69" width="27.1" height="31.0" fill="rgb(248,45,16)" rx="2" ry="2" />
+<text  x="621.35" y="87.5" >s..</text>
+</g>
+<g >
+<title>_collections_abc (4,363 samples, 10.54%)</title><rect x="734.8" y="69" width="145.5" height="31.0" fill="rgb(248,32,10)" rx="2" ry="2" />
+<text  x="737.81" y="87.5" >_collections_abc</text>
+</g>
+<g >
+<title>genericpath (656 samples, 1.58%)</title><rect x="712.9" y="37" width="21.9" height="31.0" fill="rgb(214,67,9)" rx="2" ry="2" />
+<text  x="715.94" y="55.5" >g..</text>
+</g>
+<g >
+<title>_stat (71 samples, 0.17%)</title><rect x="643.0" y="37" width="2.4" height="31.0" fill="rgb(237,216,18)" rx="2" ry="2" />
+<text  x="646.02" y="55.5" ></text>
+</g>
+<g >
+<title>codecs (5,232 samples, 12.64%)</title><rect x="51.4" y="101" width="174.5" height="31.0" fill="rgb(228,67,21)" rx="2" ry="2" />
+<text  x="54.41" y="119.5" >codecs</text>
+</g>
+<g >
+<title>os (12,092 samples, 29.21%)</title><rect x="477.1" y="101" width="403.2" height="31.0" fill="rgb(234,145,40)" rx="2" ry="2" />
+<text  x="480.11" y="119.5" >os</text>
+</g>
+<g >
+<title>io (1,459 samples, 3.53%)</title><rect x="263.8" y="133" width="48.6" height="31.0" fill="rgb(224,161,42)" rx="2" ry="2" />
+<text  x="266.76" y="151.5" >io</text>
+</g>
+<g >
+<title>abc (909 samples, 2.20%)</title><rect x="282.1" y="101" width="30.3" height="31.0" fill="rgb(221,49,15)" rx="2" ry="2" />
+<text  x="285.10" y="119.5" >abc</text>
+</g>
+</g>
+</svg>
