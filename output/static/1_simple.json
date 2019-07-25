@@ -1,0 +1,37 @@
+{
+ "nodes": [
+  {
+   "id": "small",
+   "label": "small:1005165us",
+   "size": 1005165,
+   "x": "0.05668",
+   "y": "0.02037"
+  },
+  {
+   "id": "main",
+   "label": "main:Noneus",
+   "size": 1,
+   "x": "0.02815",
+   "y": "0.72950"
+  },
+  {
+   "id": "large",
+   "label": "large:10007602us",
+   "size": 10007602,
+   "x": "0.32578",
+   "y": "0.94238"
+  }
+ ],
+ "edges": [
+  {
+   "id": "main->small",
+   "source": "main",
+   "target": "small"
+  },
+  {
+   "id": "main->large",
+   "source": "main",
+   "target": "large"
+  }
+ ]
+}
