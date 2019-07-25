@@ -6,6 +6,13 @@ import subprocess
 import tempfile
 
 
+old_run = subprocess.run
+def new_run(*args, **kwargs):
+    print("Running: {}".format(" ".join(list(*args))))
+    return old_run(*args, **kwargs)
+subprocess.run = new_run
+
+
 OUTPUT_DIR = "output"
 STATIC_DIR = "static"
 MAIN_FILE = "main.py"

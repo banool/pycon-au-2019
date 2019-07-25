@@ -14,5 +14,5 @@ There is also a PDF of the presentation. I haven't included the source itself in
 Btw, to copy code snippets into Keynote, you can do the following:
 - Open Terminal (Terminal.app, not iTerm 2).
 - Open your code in vim. Get yourself a nice theme with a black background.
-- Increase the size of the text. I got it to where it would paste into Keynote as size 48 font.
+- Increase the size of the text. I got it to where it would paste into Keynote as size 48 Menlo font.
 - Copy the code into a text box in Keynote. Put a black box behind the text.

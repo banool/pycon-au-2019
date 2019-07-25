@@ -12,13 +12,13 @@
 <!-- equal1 -->
 <g id="node1" class="node">
 <title>equal1</title>
-<ellipse fill="#80b34c" stroke="#000000" cx="27" cy="-90" rx="27" ry="18"/>
-<text text-anchor="middle" x="27" y="-87" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">equal1</text>
+<ellipse fill="#b34c4c" stroke="#000000" cx="27" cy="-90" rx="27" ry="18"/>
+<text text-anchor="middle" x="27" y="-87" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">equal1</text>
 </g>
 <!-- shared -->
 <g id="node2" class="node">
 <title>shared</title>
-<ellipse fill="#c24747" stroke="#000000" cx="63" cy="-162" rx="27" ry="18"/>
+<ellipse fill="#8547c2" stroke="#000000" cx="63" cy="-162" rx="27" ry="18"/>
 <text text-anchor="middle" x="63" y="-159" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">shared</text>
 </g>
 <!-- equal1&#45;&gt;shared -->
@@ -30,7 +30,7 @@
 <!-- main -->
 <g id="node3" class="node">
 <title>main</title>
-<ellipse fill="#49acac" stroke="#000000" cx="63" cy="-18" rx="27" ry="18"/>
+<ellipse fill="#7aac49" stroke="#000000" cx="63" cy="-18" rx="27" ry="18"/>
 <text text-anchor="middle" x="63" y="-15" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">main</text>
 </g>
 <!-- main&#45;&gt;equal1 -->
@@ -42,8 +42,8 @@
 <!-- equal2 -->
 <g id="node4" class="node">
 <title>equal2</title>
-<ellipse fill="#7f4cb3" stroke="#000000" cx="99" cy="-90" rx="27" ry="18"/>
-<text text-anchor="middle" x="99" y="-87" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">equal2</text>
+<ellipse fill="#4cb3b3" stroke="#000000" cx="99" cy="-90" rx="27" ry="18"/>
+<text text-anchor="middle" x="99" y="-87" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">equal2</text>
 </g>
 <!-- main&#45;&gt;equal2 -->
 <g id="edge3" class="edge">
