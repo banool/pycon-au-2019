@@ -7,9 +7,13 @@ import tempfile
 
 
 old_run = subprocess.run
+
+
 def new_run(*args, **kwargs):
     print("Running: {}".format(" ".join(list(*args))))
     return old_run(*args, **kwargs)
+
+
 subprocess.run = new_run
 
 
@@ -17,6 +21,8 @@ OUTPUT_DIR = "output"
 STATIC_DIR = "static"
 MAIN_FILE = "main.py"
 STDERR_FILE_TEMPLATE = "{}.stderr"
+PYDEPS_CONNECTEDNESS_FILE_TEMPLATE = "{}.connectedness"
+PYDEPS_CONNECTEDNESS_SVG_FILE_TEMPLATE = "{}_connectedness.svg"
 PYDEPS_SVG_FILE_TEMPLATE = "{}.svg"
 PYDEPS_SIGMA_FILE_TEMPLATE = "{}.json"
 PYDEPS_SIGMA_HTML_FILE_TEMPLATE = "{}.html"
@@ -53,7 +59,12 @@ def generate_stderr(program_name, careful=False):
 
 
 def generate_pydeps(
-    program_name, stderr_location=None, careful=False, png=False, sigma=False
+    program_name,
+    stderr_location=None,
+    careful=False,
+    png=False,
+    sigma=False,
+    connectedness=False,
 ):
     if sigma:
         program_name = PYDEPS_SIGMA_FILE_TEMPLATE.format(program_name)
@@ -61,18 +72,37 @@ def generate_pydeps(
         if not stderr_location:
             program_name = "{}_no_times".format(program_name)
         program_name = PYDEPS_SVG_FILE_TEMPLATE.format(program_name)
+    elif connectedness:
+        stdout_location = PYDEPS_CONNECTEDNESS_FILE_TEMPLATE.format(program_name)
+        stdout_location = os.path.join("../", OUTPUT_DIR, STATIC_DIR, stdout_location)
+        program_name = PYDEPS_CONNECTEDNESS_SVG_FILE_TEMPLATE.format(program_name)
     else:
         raise RuntimeError("sigma or png must be True")
     location = os.path.join("../", OUTPUT_DIR, STATIC_DIR, program_name)
     if os.path.exists(location) and careful:
         return location
-    args = ["pydeps", MAIN_FILE, "--noshow", "--max-bacon", "0", "--reverse", "-o", location]
+    args = [
+        "pydeps",
+        MAIN_FILE,
+        "--noshow",
+        "--max-bacon",
+        "0",
+        "--reverse",
+        "-o",
+        location,
+    ]
     if stderr_location:
         abs_stderr_location = os.path.abspath(stderr_location)
         args += ["--import-times-file", abs_stderr_location]
     if sigma:
         args += ["--nodot", "--sigmajs"]
-    subprocess.run(args)
+    if connectedness:
+        args += ["--connectedness"]
+        with open(stdout_location, "w") as f:
+            subprocess.run(args, stdout=f)
+        return [location, stdout_location]
+    else:
+        subprocess.run(args)
     return location
 
 
@@ -137,6 +167,9 @@ if __name__ == "__main__":
     flamegraph_location = generate_flamegraph(
         program_name, stderr_location, careful=args.careful
     )
+    connectedness_location, connectedness_stdout_location = generate_pydeps(
+        program_name, stderr_location, careful=args.careful, connectedness=True
+    )
 
     new_stderr_location = os.path.join("../", OUTPUT_DIR, stderr_location)
     shutil.move(stderr_location, new_stderr_location)
@@ -149,5 +182,7 @@ if __name__ == "__main__":
         sigma_location,
         sigma_html_location,
         flamegraph_location,
+        connectedness_location,
+        connectedness_stdout_location,
     ]:
         LOG.info(f"Generated {i}")
