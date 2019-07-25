@@ -8,7 +8,6 @@ verify_ssl = true
 [packages]
 tuna = "*"
 pydeps = {editable = true,git = "https://github.com/banool/pydeps.git"}
-black = "*"
 
 [requires]
 python_version = "3.7"

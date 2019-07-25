@@ -19,7 +19,7 @@
         "pydeps": {
             "editable": true,
             "git": "https://github.com/banool/pydeps.git",
-            "ref": "5a4f25cb55c50fca1b426b759bd3dae01a71398a"
+            "ref": "b1fcb289b31c80bd4295750680c6c813f023f135"
         },
         "stdlib-list": {
             "hashes": [

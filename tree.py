@@ -15,8 +15,8 @@ LOG.addHandler(ch)
 
 
 class Node:
-    def __init__(self, *, pkg_name, import_time, indentation):
-        self.pkg_name = pkg_name
+    def __init__(self, *, module_name, import_time, indentation):
+        self.module_name = module_name
         self.import_time = import_time
         self.indentation = indentation
         self.children = []
@@ -44,10 +44,10 @@ class Node:
                 break
             if indentation != self.indentation + 1:
                 continue
-            pkg_name = l.split("|")[-1].lstrip().rstrip()
+            module_name = l.split("|")[-1].lstrip().rstrip()
             import_time = int(l.split("|")[0].split()[-1])
             new = Node(
-                pkg_name=pkg_name, import_time=import_time, indentation=indentation
+                module_name=module_name, import_time=import_time, indentation=indentation
             )
             new.get_children_from_lines(lines[i + 1 :])
             nodes.append(new)
@@ -60,7 +60,7 @@ class Node:
 
     def __str__(self):
         return "{} {} {}".format(
-            self.indentation * " ", self.pkg_name, self.import_time
+            self.indentation * " ", self.module_name, self.import_time
         )
 
     def print_tree(self):
@@ -71,10 +71,10 @@ class Node:
     def _get_flamegraph_output(self):
         """ Returns a list of lines of flamegraph output. """
         out = []
-        out.append("{} {}".format(self.pkg_name, self.import_time))
+        out.append("{} {}".format(self.module_name, self.import_time))
         for c in self.children:
             for a in c._get_flamegraph_output():
-                o = "{};{}".format(self.pkg_name, a)
+                o = "{};{}".format(self.module_name, a)
                 out.append(o)
         return out
 
@@ -126,7 +126,7 @@ def _get_tree(lines):
     lines = lines[::-1]  # Very important, see get_children_from_lines.
 
     # We don't know the total cost from the start so just set it to 0.
-    root = Node(pkg_name="everything", import_time=0, indentation=0)
+    root = Node(module_name="everything", import_time=0, indentation=0)
     root.get_children_from_lines(lines)
     root.import_time = root.get_import_time_of_subtree()
 

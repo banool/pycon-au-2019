@@ -10,13 +10,13 @@ OUTPUT_DIR = "output"
 STATIC_DIR = "static"
 MAIN_FILE = "main.py"
 STDERR_FILE_TEMPLATE = "{}.stderr"
-SIGMA_FILE_TEMPLATE = "{}.json"
-SIGMA_HTML_FILE_TEMPLATE = "{}.html"
-SIGMA_ACTUAL_TEMPLATE = "template.html"
+PYDEPS_SVG_FILE_TEMPLATE = "{}.svg"
+PYDEPS_SIGMA_FILE_TEMPLATE = "{}.json"
+PYDEPS_SIGMA_HTML_FILE_TEMPLATE = "{}.html"
+PYPEPS_SIGMA_ACTUAL_TEMPLATE = "template.html"
 FLAMEGRAPH_FILE_TEMPLATE = "{}.svg"
 TREE_SCRIPT = "tree.py"
 FLAMEGRAPH_SCRIPT = "flamegraph.pl"
-
 
 
 LOG = logging.getLogger(__name__)
@@ -45,36 +45,43 @@ def generate_stderr(program_name, careful=False):
     return stderr_location
 
 
-def generate_sigma(program_name, stderr_location, careful=False):
-    json_location = os.path.join("../", OUTPUT_DIR, STATIC_DIR, SIGMA_FILE_TEMPLATE.format(program_name))
-    if os.path.exists(json_location) and careful:
-        return json_location
-    abs_stderr_location = os.path.abspath(stderr_location)
-    with open(json_location, "w") as f:
-        subprocess.run(
-            [
-                "pydeps",
-                MAIN_FILE,
-                "--nodot",
-                "--no-output",
-                "--sigmajs",
-                "--import-times-file",
-                abs_stderr_location,
-            ],
-            stdout=f,
-        )
-    return json_location
+def generate_pydeps(
+    program_name, stderr_location=None, careful=False, png=False, sigma=False
+):
+    if sigma:
+        program_name = PYDEPS_SIGMA_FILE_TEMPLATE.format(program_name)
+    elif png:
+        if not stderr_location:
+            program_name = "{}_no_times".format(program_name)
+        program_name = PYDEPS_SVG_FILE_TEMPLATE.format(program_name)
+    else:
+        raise RuntimeError("sigma or png must be True")
+    location = os.path.join("../", OUTPUT_DIR, STATIC_DIR, program_name)
+    if os.path.exists(location) and careful:
+        return location
+    args = ["pydeps", MAIN_FILE, "--noshow", "--max-bacon", "0", "--reverse", "-o", location]
+    if stderr_location:
+        abs_stderr_location = os.path.abspath(stderr_location)
+        args += ["--import-times-file", abs_stderr_location]
+    if sigma:
+        args += ["--nodot", "--sigmajs"]
+    subprocess.run(args)
+    return location
 
 
 def generate_sigma_html(program_name, careful=False):
-    template_location = os.path.join("../", OUTPUT_DIR, SIGMA_ACTUAL_TEMPLATE)
-    copy_location = os.path.join("../", OUTPUT_DIR, SIGMA_HTML_FILE_TEMPLATE.format(program_name))
+    template_location = os.path.join("../", OUTPUT_DIR, PYPEPS_SIGMA_ACTUAL_TEMPLATE)
+    copy_location = os.path.join(
+        "../", OUTPUT_DIR, PYDEPS_SIGMA_HTML_FILE_TEMPLATE.format(program_name)
+    )
     shutil.copy(template_location, copy_location)
     return copy_location
 
 
 def generate_flamegraph(program_name, stderr_location, careful=False):
-    svg_location = os.path.join("../", OUTPUT_DIR, FLAMEGRAPH_FILE_TEMPLATE.format(program_name))
+    svg_location = os.path.join(
+        "../", OUTPUT_DIR, FLAMEGRAPH_FILE_TEMPLATE.format(program_name)
+    )
     if os.path.exists(svg_location) and careful:
         return svg_location
     with tempfile.NamedTemporaryFile(mode="w") as temp_f:
@@ -84,7 +91,15 @@ def generate_flamegraph(program_name, stderr_location, careful=False):
         script = os.path.join("../", FLAMEGRAPH_SCRIPT)
         with open(svg_location, "wb") as svg_f:
             subprocess.run(
-                [script, "--width", "1200", "--height", "32", "--flamechart", temp_f.name],
+                [
+                    script,
+                    "--width",
+                    "1200",
+                    "--height",
+                    "32",
+                    "--flamechart",
+                    temp_f.name,
+                ],
                 stdout=svg_f,
             )
     return svg_location
@@ -102,7 +117,15 @@ if __name__ == "__main__":
     program_name = os.path.basename(os.path.normpath(args.directory))
 
     stderr_location = generate_stderr(program_name)
-    sigma_location = generate_sigma(program_name, stderr_location, careful=args.careful)
+    png_no_times_location = generate_pydeps(
+        program_name, None, careful=args.careful, png=True
+    )
+    png_location = generate_pydeps(
+        program_name, stderr_location, careful=args.careful, png=True
+    )
+    sigma_location = generate_pydeps(
+        program_name, stderr_location, careful=args.careful, sigma=True
+    )
     sigma_html_location = generate_sigma_html(program_name, careful=args.careful)
     flamegraph_location = generate_flamegraph(
         program_name, stderr_location, careful=args.careful
@@ -112,5 +135,12 @@ if __name__ == "__main__":
     shutil.move(stderr_location, new_stderr_location)
 
     LOG.info("Generated these files (relative to {})".format(args.directory))
-    for i in [new_stderr_location, sigma_location, sigma_html_location, flamegraph_location]:
+    for i in [
+        new_stderr_location,
+        png_no_times_location,
+        png_location,
+        sigma_location,
+        sigma_html_location,
+        flamegraph_location,
+    ]:
         LOG.info(f"Generated {i}")
