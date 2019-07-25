@@ -1,0 +1,66 @@
+{
+ "nodes": [
+  {
+   "id": "constants",
+   "label": "constants:504039us",
+   "size": 504039,
+   "x": "0.44412",
+   "y": "0.63323"
+  },
+  {
+   "id": "one",
+   "label": "one:1879us",
+   "size": 1879,
+   "x": "0.87028",
+   "y": "0.60770"
+  },
+  {
+   "id": "funcs",
+   "label": "funcs:303728us",
+   "size": 303728,
+   "x": "0.01108",
+   "y": "0.50707"
+  },
+  {
+   "id": "main",
+   "label": "main:Noneus",
+   "size": 1,
+   "x": "0.19812",
+   "y": "0.63570"
+  },
+  {
+   "id": "two",
+   "label": "two:794us",
+   "size": 794,
+   "x": "0.92026",
+   "y": "0.87984"
+  }
+ ],
+ "edges": [
+  {
+   "id": "one->constants",
+   "source": "one",
+   "target": "constants"
+  },
+  {
+   "id": "one->funcs",
+   "source": "one",
+   "target": "funcs"
+  },
+  {
+   "id": "main->one",
+   "source": "main",
+   "target": "one"
+  },
+  {
+   "id": "main->two",
+   "source": "main",
+   "target": "two"
+  },
+  {
+   "id": "two->constants",
+   "source": "two",
+   "target": "constants"
+  }
+ ]
+}
