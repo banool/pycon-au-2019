@@ -8,6 +8,8 @@ verify_ssl = true
 [packages]
 tuna = "*"
 pydeps = {editable = true,git = "https://github.com/banool/pydeps.git"}
+import_times = {editable = true,git = "https://github.com/banool/import_times.git"}
+demandimport = "*"
 
 [requires]
 python_version = "3.7"

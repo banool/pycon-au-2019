@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f1e13069ab5b776dacd56dd8f4f99759f3c9e48e278f89ffe5c3ac8fbcb0ad83"
+            "sha256": "6ec6601c44912f7be84856e05caaef5602ce4d6ddb68ba71bcd484ef95f8fa8a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,10 +16,22 @@
         ]
     },
     "default": {
+        "demandimport": {
+            "hashes": [
+                "sha256:3cb9f51a5e85aa7dd77acb4dcc2b3be8ead1472e90e64ea991875a06611dff8d"
+            ],
+            "index": "pypi",
+            "version": "==0.3.4"
+        },
+        "import-times": {
+            "editable": true,
+            "git": "https://github.com/banool/import_times.git",
+            "ref": "8d53c348745061cbd1130307b4ac5bf06a9f1842"
+        },
         "pydeps": {
             "editable": true,
             "git": "https://github.com/banool/pydeps.git",
-            "ref": "b1fcb289b31c80bd4295750680c6c813f023f135"
+            "ref": "f71e1f478eb1aa93d04e139dce80881889e97d37"
         },
         "stdlib-list": {
             "hashes": [
