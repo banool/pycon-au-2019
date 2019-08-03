@@ -1,3 +1,3 @@
 import time
-time.sleep(0.0001)
+time.sleep(0.001)
 
