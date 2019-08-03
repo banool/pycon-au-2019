@@ -26,7 +26,7 @@
         "import-times": {
             "editable": true,
             "git": "https://github.com/banool/import_times.git",
-            "ref": "8d53c348745061cbd1130307b4ac5bf06a9f1842"
+            "ref": "0bf0fc6d6d8f3a790fcb94590d19611f99d9ae01"
         },
         "pydeps": {
             "editable": true,
