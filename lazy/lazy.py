@@ -57,6 +57,7 @@ class LazyModule:
     def __getattr__(self, attr):
         if self.imported:
             pass
+        # It'd be great to avoid it trying to import this in the first place.
         elif attr in ["__name__", "__loader__", "__package__", "__path__"]:
             return None
         elif not self.imported:
