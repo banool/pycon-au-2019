@@ -2,31 +2,31 @@
  "nodes": [
   {
    "id": "shared",
-   "label": "shared:3002347us",
-   "size": 3002347,
-   "x": "0.62736",
-   "y": "0.72914"
+   "label": "shared:3002926us",
+   "size": 3002926,
+   "x": "0.84497",
+   "y": "0.67650"
   },
   {
    "id": "equal1",
-   "label": "equal1:1002910us",
-   "size": 1002910,
-   "x": "0.88841",
-   "y": "0.21813"
+   "label": "equal1:1006842us",
+   "size": 1006842,
+   "x": "0.59893",
+   "y": "0.46979"
+  },
+  {
+   "id": "equal2",
+   "label": "equal2:1003640us",
+   "size": 1003640,
+   "x": "0.26074",
+   "y": "0.19792"
   },
   {
    "id": "main",
    "label": "main:Noneus",
    "size": 1,
-   "x": "0.53602",
-   "y": "0.91489"
-  },
-  {
-   "id": "equal2",
-   "label": "equal2:1010078us",
-   "size": 1010078,
-   "x": "0.26072",
-   "y": "0.94828"
+   "x": "0.78422",
+   "y": "0.64449"
   }
  ],
  "edges": [
@@ -36,14 +36,14 @@
    "target": "shared"
   },
   {
-   "id": "main->equal1",
-   "source": "main",
-   "target": "equal1"
-  },
-  {
    "id": "main->equal2",
    "source": "main",
    "target": "equal2"
+  },
+  {
+   "id": "main->equal1",
+   "source": "main",
+   "target": "equal1"
   },
   {
    "id": "equal2->shared",

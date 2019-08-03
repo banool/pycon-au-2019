@@ -12,14 +12,14 @@
 <!-- main -->
 <g id="node1" class="node">
 <title>main</title>
-<ellipse fill="#ac4949" stroke="#000000" cx="99" cy="-18" rx="27" ry="18"/>
-<text text-anchor="middle" x="99" y="-15" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">main</text>
+<ellipse fill="#49ac49" stroke="#000000" cx="99" cy="-18" rx="27" ry="18"/>
+<text text-anchor="middle" x="99" y="-15" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">main</text>
 </g>
 <!-- small -->
 <g id="node2" class="node">
 <title>small</title>
-<ellipse fill="#53b653" stroke="#000000" cx="27" cy="-90" rx="27" ry="18"/>
-<text text-anchor="middle" x="27" y="-87" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">small</text>
+<ellipse fill="#5353b6" stroke="#000000" cx="27" cy="-90" rx="27" ry="18"/>
+<text text-anchor="middle" x="27" y="-87" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">small</text>
 </g>
 <!-- main&#45;&gt;small -->
 <g id="edge1" class="edge">
@@ -30,7 +30,7 @@
 <!-- large -->
 <g id="node3" class="node">
 <title>large</title>
-<ellipse fill="#5353b6" stroke="#000000" cx="99" cy="-90" rx="27" ry="18"/>
+<ellipse fill="#b65353" stroke="#000000" cx="99" cy="-90" rx="27" ry="18"/>
 <text text-anchor="middle" x="99" y="-87" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">large</text>
 </g>
 <!-- main&#45;&gt;large -->

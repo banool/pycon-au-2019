@@ -1,3 +1,5 @@
+**Update:** This readme is a bit out of date, it just talks about sigma.js. These days you can just use `generate.py` one directory up and it'll take care of everything for you.
+
 This directory holds all the sigma js stuff for all of the programs. I do this so I don't have to dump the sigma js deps everywhere. Use it like this:
 
 ```

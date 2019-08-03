@@ -142,7 +142,7 @@ def generate_flamegraph(program_name, stderr_location, careful=False):
     return svg_location
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("directory", help="Directory to generate output for")
     parser.add_argument(
@@ -151,6 +151,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     os.chdir(args.directory)
+    if os.path.isfile("donotgenerate"):
+        LOG.warning("donotgenerate exists, not generating output for {}".format(args.directory))
+        return
     program_name = os.path.basename(os.path.normpath(args.directory))
 
     stderr_location = generate_stderr(program_name)
@@ -186,3 +189,6 @@ if __name__ == "__main__":
         connectedness_stdout_location,
     ]:
         LOG.info(f"Generated {i}")
+
+if __name__ == "__main__":
+    main()

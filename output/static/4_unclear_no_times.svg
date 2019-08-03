@@ -18,8 +18,8 @@
 <!-- funcs -->
 <g id="node2" class="node">
 <title>funcs</title>
-<ellipse fill="#b65353" stroke="#000000" cx="27" cy="-162" rx="27" ry="18"/>
-<text text-anchor="middle" x="27" y="-159" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">funcs</text>
+<ellipse fill="#a2b653" stroke="#000000" cx="27" cy="-162" rx="27" ry="18"/>
+<text text-anchor="middle" x="27" y="-159" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">funcs</text>
 </g>
 <!-- one&#45;&gt;funcs -->
 <g id="edge1" class="edge">
@@ -30,8 +30,8 @@
 <!-- constants -->
 <g id="node3" class="node">
 <title>constants</title>
-<ellipse fill="#47c278" stroke="#000000" cx="106" cy="-162" rx="33.8996" ry="18"/>
-<text text-anchor="middle" x="106" y="-159" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">constants</text>
+<ellipse fill="#c24747" stroke="#000000" cx="106" cy="-162" rx="33.8996" ry="18"/>
+<text text-anchor="middle" x="106" y="-159" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">constants</text>
 </g>
 <!-- one&#45;&gt;constants -->
 <g id="edge2" class="edge">
@@ -42,11 +42,11 @@
 <!-- main -->
 <g id="node4" class="node">
 <title>main</title>
-<ellipse fill="#98ac49" stroke="#000000" cx="70" cy="-18" rx="27" ry="18"/>
+<ellipse fill="#49ac71" stroke="#000000" cx="70" cy="-18" rx="27" ry="18"/>
 <text text-anchor="middle" x="70" y="-15" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#000000">main</text>
 </g>
 <!-- main&#45;&gt;one -->
-<g id="edge3" class="edge">
+<g id="edge4" class="edge">
 <title>main&#45;&gt;one</title>
 <path fill="none" stroke="#000000" d="M61.2854,-35.4292C57.0403,-43.9193 51.8464,-54.3071 47.1337,-63.7326"/>
 <polygon fill="#000000" stroke="#000000" points="43.976,-62.2218 42.6343,-72.7313 50.237,-65.3523 43.976,-62.2218"/>
@@ -58,7 +58,7 @@
 <text text-anchor="middle" x="106" y="-87" font-family="Helvetica,sans-Serif" font-size="10.00" fill="#ffffff">two</text>
 </g>
 <!-- main&#45;&gt;two -->
-<g id="edge4" class="edge">
+<g id="edge3" class="edge">
 <title>main&#45;&gt;two</title>
 <path fill="none" stroke="#000000" d="M78.7146,-35.4292C82.9597,-43.9193 88.1536,-54.3071 92.8663,-63.7326"/>
 <polygon fill="#000000" stroke="#000000" points="89.763,-65.3523 97.3657,-72.7313 96.024,-62.2218 89.763,-65.3523"/>
