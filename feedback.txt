@@ -1,0 +1,32 @@
+- what are imports, go in to that more at the start
+- < 3.7, how do i get started? 
+  - if i'm 3.6, how likely is it to run 3.7 and it just work?
+  - talk about my experience with this ^ and in general
+  - if you're <3.7, get your data and you can move forward anyway
+  - go to the survey to see what verions people are on
+- demandimport version support? which tools can _i_ use.
+- summary should mention all the tools I suggested (table)
+
+- that's a reason to upgrade
+
+- flamegraph is the first visualisation, take time explaining it
+  - highlights, circle
+- small is larger than large in flamegraph and tuna, fix that
+- a bit too fast in this section
+
+- summary could be stronger
+  - include links
+  - what to do next
+  - leave the link slide up as the last slide
+
+- try to include story from my own tools
+
+- talk more about doing work at module level
+  - zen of python for this?
+
+- what is the cost of demand import?
+
+- in general, talk more about the fixes.
+  - in server, import everything at the start
+
+- what is the cost of figuring out something is imported high?
